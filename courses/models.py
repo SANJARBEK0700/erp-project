@@ -128,3 +128,58 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student} → {self.course}"
+
+
+
+from django.db import models
+
+
+class CourseMaterial(models.Model):
+
+    MATERIAL_TYPES = (
+        ('video', 'Video'),
+        ('pdf', 'PDF'),
+        ('link', 'Link'),
+        ('other', 'Other'),
+    )
+
+    title = models.CharField(
+        max_length=200
+    )
+
+    course = models.ForeignKey(
+        'courses.Course',
+        on_delete=models.CASCADE,
+        related_name='materials'
+    )
+
+    material_type = models.CharField(
+        max_length=20,
+        choices=MATERIAL_TYPES
+    )
+
+    file = models.FileField(
+        upload_to='course_materials/',
+        null=True,
+        blank=True
+    )
+
+    url = models.URLField(
+        null=True,
+        blank=True
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    order = models.IntegerField(
+        default=0
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.title} - {self.course}"
